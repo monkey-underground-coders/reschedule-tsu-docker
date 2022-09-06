@@ -1,0 +1,40 @@
+app:
+  vk:
+    group-id: ${VK_GROUP_ID}
+    token: ${VK_TOKEN}
+    use-callback-api: ${VK_USE_CALLBACK_API}
+    secret-confirm: ${VK_SECRET_CONFIRM}
+    secret-key: ${VK_SECRET_KEY}
+  rts-url: http://rts:8080/reschedule-tsu-spring/
+  red-faculties: []
+  text-query:
+    activate-dialogflow: ${ACTIVATE_DIALOGFLOW}
+    credentials-path: ${TEXT_QUERY_CREDENTIALS_PATH}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, prometheus
+  metrics:
+    enable:
+      tomcat: true
+      jvm: true
+      process: false
+      hikaricp: false
+      system: true
+      jdbc: false
+      logback: true
+# ===============================
+# DB CONNECTION
+# ===============================
+spring.datasource.url: jdbc:postgresql://localhost:5432/rtvkprod
+spring.datasource.username: rtvk
+spring.datasource.password: vMsk8vTbo7p6Rg33zA6jst
+# ===============================
+# JPA / HIBERNATE
+# ===============================
+spring.jpa.show-sql: true
+spring.jpa.hibernate.ddl-auto: update
+spring.jpa.properties.hibernate.default_schema: public
+spring.jpa.properties.hibernate.current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults: false

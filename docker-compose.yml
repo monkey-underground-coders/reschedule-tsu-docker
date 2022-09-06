@@ -1,0 +1,103 @@
+version: "3.3"
+
+services:
+  rts:
+    build:
+      context: https://github.com/monkey-underground-coders/reschedule-tsu-spring.git
+#      context: C:\Users\6rayWa1cher\vscode\reschedule-tsu-spring
+    networks:
+      - private_network
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/rts
+      - SPRING_DATASOURCE_USERNAME=reschedule
+      - SPRING_DATASOURCE_PASSWORD=reschedule
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_CONFIG_LOCATION=/app/rts-application.yml
+      - TSUDB_ENABLED=${TSUDB_ENABLED:-false}
+      - TSUDB_CURRENT_SEASON=${TSUDB_CURRENT_SEASON:-Осень}
+      - TSUDB_SEMESTER=${TSUDB_SEMESTER:-2022-2023}
+      - TSUDB_PATH=${TSUDB_PATH:-100::/64}
+      - SENTRY_DSN=${RTS_SENTRY_DSN}
+    volumes:
+      - rtscache:/app/cache
+      - ./config/rts-application.yml:/app/rts-application.yml:ro
+    ports:
+      - '${RTS_PORT:-8080}:8080'
+    restart: unless-stopped
+
+  rtvk:
+    build:
+      context: https://github.com/monkey-underground-coders/reschedule-tsu-vk.git
+#      context: C:\Users\6rayWa1cher\vscode\reschedule-tsu-vk
+    networks:
+      - private_network
+    depends_on:
+      - db
+      - rts
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/rtvk
+      - SPRING_DATASOURCE_USERNAME=reschedule
+      - SPRING_DATASOURCE_PASSWORD=reschedule
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_CONFIG_LOCATION=/app/rtvk-application.yml
+      - VK_GROUP_ID=${VK_GROUP_ID}
+      - VK_TOKEN=${VK_TOKEN}
+      - VK_USE_CALLBACK_API=${VK_USE_CALLBACK_API:-false}
+      - VK_SECRET_CONFIRM=${VK_SECRET_CONFIRM}
+      - VK_SECRET_KEY=${VK_SECRET_KEY}
+      - ACTIVATE_DIALOGFLOW=${RTVK_DIALOGFLOW}
+      - TEXT_QUERY_CREDENTIALS_PATH=${TEXT_QUERY_CREDENTIALS_PATH:-file:/app/private/googlecredentials.json}
+      - SENTRY_DSN=${RTVK_SENTRY_DSN}
+    volumes:
+      - ./config/rtvk-application.yml:/app/rtvk-application.yml:ro
+      - ./config/private/rtvk:/app/private:ro
+    ports:
+      - '${RTVK_PORT:-8081}:8080'
+    restart: unless-stopped
+
+  rtt:
+    build:
+            context: https://github.com/monkey-underground-coders/reschedule-tsu-telegram.git
+#      context: C:\Users\6rayWa1cher\vscode\reschedule-tsu-telegram
+    networks:
+      - private_network
+    depends_on:
+      - db
+      - rts
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/rtt
+      - DB_USERNAME=reschedule
+      - DB_PASSWORD=reschedule
+      - DB_DRIVER=org.hibernate.dialect.PostgresPlusDialect
+#      - HIBERNATE_AUTO_GENERATE=update
+      - BOT_NAME=TverSU Timing
+      - BOT_TOKEN=${RTT_TOKEN}
+      - METRICS_ENABLED=true
+      - METRICS_PORT=7019
+      - SPRING_CONFIG_LOCATION=file:/app/private/timingbot.properties
+      - PROPERTIES_SOURCE=file:/app/private/timingbot.properties
+    volumes:
+      - ./config/private/rtt:/app/private:ro
+    restart: unless-stopped
+
+  db:
+    image: "postgres:14.1-alpine"
+    networks:
+      - private_network
+    environment:
+      - POSTGRES_USER=reschedule
+      - POSTGRES_PASSWORD=reschedule
+      - POSTGRES_MULTIPLE_DATABASES=rts,rtvk,rtt
+    volumes:
+      - ./config/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+networks:
+  private_network:
+
+volumes:
+  pgdata:
+  rtscache:

@@ -1,0 +1,4 @@
+.env
+config/private/**/*.json
+config/private/**/*.properties
+!config/private/**/.keep

@@ -1,0 +1,38 @@
+app:
+  tsudb:
+    enabled: ${TSUDB_ENABLED}
+    import-source: network
+    path: ${TSUDB_PATH}
+    cache-path: /app/cache
+    current-season: ${TSUDB_CURRENT_SEASON}
+    semester: ${TSUDB_SEMESTER}
+    cron: 0 0 0,6,12,17 ? * *
+  week-sign:
+    primary-info:
+      facultyName: ПМиК
+      date: 2022-09-01
+      week-sign: MINUS
+      week-sign-strategy: plusminus
+spring:
+  jmx:
+    default-domain: com.a6raywa1cher.rescheduletsuspring
+    unique-names: true
+# ===============================
+# DB CONNECTION
+# ===============================
+#spring.datasource.url: jdbc:postgresql://localhost:5432/reshedule-tsu
+#spring.datasource.username: postgres
+#spring.datasource.password: Ofss57ArFFNAZfNL9cWO
+# ===============================
+# JPA / HIBERNATE
+# ===============================
+spring.jpa.show-sql: false
+spring.jpa.hibernate.ddl-auto: update
+spring.jpa.properties.hibernate:
+  default_schema: public
+  current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+  use_jdbc_metadata_defaults: false
+# ===============================
+# SPRING ACTUATOR
+# ===============================
+#management.endpoints.web.exposure.include: "*"
