@@ -46,7 +46,7 @@ services:
       - VK_SECRET_CONFIRM=${VK_SECRET_CONFIRM}
       - VK_SECRET_KEY=${VK_SECRET_KEY}
       - ACTIVATE_DIALOGFLOW=${RTVK_DIALOGFLOW}
-      - TEXT_QUERY_CREDENTIALS_PATH=${TEXT_QUERY_CREDENTIALS_PATH:-file:/app/private/googlecredentials.json}
+      - TEXT_QUERY_CREDENTIALS_PATH=file:/app/private/googlecredentials.json
       - SENTRY_DSN=${RTVK_SENTRY_DSN}
     volumes:
       - ./config/rtvk-application.yml:/app/rtvk-application.yml:ro
