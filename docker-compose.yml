@@ -4,7 +4,6 @@ services:
   rts:
     build:
       context: https://github.com/monkey-underground-coders/reschedule-tsu-spring.git
-#      context: C:\Users\6rayWa1cher\vscode\reschedule-tsu-spring
     networks:
       - private_network
     depends_on:
@@ -30,7 +29,6 @@ services:
   rtvk:
     build:
       context: https://github.com/monkey-underground-coders/reschedule-tsu-vk.git
-#      context: C:\Users\6rayWa1cher\vscode\reschedule-tsu-vk
     networks:
       - private_network
     depends_on:
@@ -59,8 +57,7 @@ services:
 
   rtt:
     build:
-            context: https://github.com/monkey-underground-coders/reschedule-tsu-telegram.git
-#      context: C:\Users\6rayWa1cher\vscode\reschedule-tsu-telegram
+      context: https://github.com/monkey-underground-coders/reschedule-tsu-telegram.git
     networks:
       - private_network
     depends_on:
@@ -71,7 +68,6 @@ services:
       - DB_USERNAME=reschedule
       - DB_PASSWORD=reschedule
       - DB_DRIVER=org.hibernate.dialect.PostgresPlusDialect
-#      - HIBERNATE_AUTO_GENERATE=update
       - BOT_NAME=TverSU Timing
       - BOT_TOKEN=${RTT_TOKEN}
       - METRICS_ENABLED=true
@@ -82,8 +78,18 @@ services:
       - ./config/private/rtt:/app/private:ro
     restart: unless-stopped
 
+  rttemplate:
+    build:
+      context: https://github.com/monkey-underground-coders/reschedule-tsu-template.git
+      args:
+        - REACT_APP_BACKEND_URL=${RTS_URL:-http://localhost:8080}
+    ports:
+      - '${RTTEMPLATE_PORT:-3000}:80'
+    restart: unless-stopped
+
   db:
-    image: "postgres:14.1-alpine"
+    build:
+      context: ./config/docker-postgresql-multiple-databases
     networks:
       - private_network
     environment:
@@ -91,7 +97,6 @@ services:
       - POSTGRES_PASSWORD=reschedule
       - POSTGRES_MULTIPLE_DATABASES=rts,rtvk,rtt
     volumes:
-      - ./config/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
