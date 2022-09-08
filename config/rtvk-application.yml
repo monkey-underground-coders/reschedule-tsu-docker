@@ -5,7 +5,7 @@ app:
     use-callback-api: ${VK_USE_CALLBACK_API}
     secret-confirm: ${VK_SECRET_CONFIRM}
     secret-key: ${VK_SECRET_KEY}
-  rts-url: http://rts:8080/reschedule-tsu-spring/
+  rts-url: http://rts:8080/
   red-faculties: []
   text-query:
     activate-dialogflow: ${ACTIVATE_DIALOGFLOW}
