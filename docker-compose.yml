@@ -19,6 +19,7 @@ services:
       - TSUDB_SEMESTER=${TSUDB_SEMESTER:-2022-2023}
       - TSUDB_PATH=${TSUDB_PATH:-100::/64}
       - SENTRY_DSN=${RTS_SENTRY_DSN}
+      - TZ=Europe/Moscow
     volumes:
       - rtscache:/app/cache
       - ./config/rts-application.yml:/app/rts-application.yml:ro
@@ -48,6 +49,7 @@ services:
       - ACTIVATE_DIALOGFLOW=${RTVK_DIALOGFLOW}
       - TEXT_QUERY_CREDENTIALS_PATH=file:/app/private/googlecredentials.json
       - SENTRY_DSN=${RTVK_SENTRY_DSN}
+      - TZ=Europe/Moscow
     volumes:
       - ./config/rtvk-application.yml:/app/rtvk-application.yml:ro
       - ./config/private/rtvk:/app/private:ro
@@ -74,6 +76,7 @@ services:
       - METRICS_PORT=7019
       - SPRING_CONFIG_LOCATION=file:/app/private/timingbot.properties
       - PROPERTIES_SOURCE=file:/app/private/timingbot.properties
+      - TZ=Europe/Moscow
     volumes:
       - ./config/private/rtt:/app/private:ro
     restart: unless-stopped
